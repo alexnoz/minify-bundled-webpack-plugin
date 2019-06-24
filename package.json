@@ -1,0 +1,49 @@
+{
+  "name": "minify-bundled-webpack-plugin",
+  "description": "Minify bundled files that weren't processed by webpack",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:alexnoz/minify-bundled-webpack-plugin.git",
+  "author": "Alex Nozdriukhin <alex.nozzzz@gmail.com>",
+  "homepage": "https://github.com/alexnoz/minify-bundled-webpack-plugin",
+  "bugs": "https://github.com/alexnoz/minify-bundled-webpack-plugin/issues",
+  "license": "MIT",
+  "keywords": [
+    "webpack",
+    "plugin",
+    "optimize",
+    "minify"
+  ],
+  "peerDependencies": {
+    "webpack": "^4.0.0"
+  },
+  "dependencies": {
+    "csso": "3.5.1",
+    "jpegtran-bin": "4.0.0",
+    "jsonminify": "0.4.1",
+    "pngquant-bin": "5.0.2",
+    "svgo": "1.2.2",
+    "terser": "4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "6.0.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.17.3",
+    "eslint-plugin-node": "9.1.0",
+    "husky": ">=1",
+    "lint-staged": ">=8",
+    "prettier": "1.18.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write ./**/*.js",
+      "eslint . --fix",
+      "git add"
+    ]
+  }
+}
