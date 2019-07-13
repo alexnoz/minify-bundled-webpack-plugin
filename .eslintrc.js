@@ -3,13 +3,14 @@ module.exports = {
     commonjs: true,
     es6: true,
     node: true,
+    jest: true,
   },
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 10,
   },
-  plugins: ['import', 'node'],
-  extends: ['airbnb-base'],
+  plugins: ['import', 'node', 'jest'],
+  extends: ['airbnb-base', 'plugin:jest/recommended'],
   rules: {
     'node/no-deprecated-api': 2,
     'node/no-extraneous-require': 2,
@@ -20,5 +21,9 @@ module.exports = {
     'import/default': 2,
     'import/export': 2,
     'arrow-parens': [2, 'as-needed'],
+    'no-restricted-syntax': 0,
+    'no-confusing-arrow': 0,
+    'function-paren-newline': 0,
+    'no-param-reassign': 0,
   },
 };

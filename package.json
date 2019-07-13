@@ -2,7 +2,7 @@
   "name": "minify-bundled-webpack-plugin",
   "description": "Minify bundled files that weren't processed by webpack",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "./src/index.js",
   "repository": "git@github.com:alexnoz/minify-bundled-webpack-plugin.git",
   "author": "Alex Nozdriukhin <alex.nozzzz@gmail.com>",
   "homepage": "https://github.com/alexnoz/minify-bundled-webpack-plugin",
@@ -14,25 +14,37 @@
     "optimize",
     "minify"
   ],
+  "scripts": {
+    "test": "jest"
+  },
   "peerDependencies": {
     "webpack": "^4.0.0"
   },
   "dependencies": {
     "csso": "3.5.1",
-    "jpegtran-bin": "4.0.0",
+    "imagemin": "7.0.0",
+    "imagemin-gifsicle": "6.0.1",
+    "imagemin-jpegtran": "6.0.0",
+    "imagemin-optipng": "7.0.0",
+    "imagemin-pngquant": "8.0.0",
+    "imagemin-svgo": "7.0.0",
     "jsonminify": "0.4.1",
-    "pngquant-bin": "5.0.2",
-    "svgo": "1.2.2",
+    "minimatch": "3.0.4",
     "terser": "4.0.0"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "3.0.0",
+    "copy-webpack-plugin": "5.0.3",
     "eslint": "6.0.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.17.3",
+    "eslint-plugin-jest": "22.7.2",
     "eslint-plugin-node": "9.1.0",
     "husky": ">=1",
+    "jest": "24.8.0",
     "lint-staged": ">=8",
-    "prettier": "1.18.2"
+    "prettier": "1.18.2",
+    "webpack": "4.35.0"
   },
   "husky": {
     "hooks": {
@@ -41,7 +53,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write ./**/*.js",
+      "prettier --write src/**/*.js",
       "eslint . --fix",
       "git add"
     ]
