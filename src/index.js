@@ -3,30 +3,26 @@ const fs = require('fs');
 const { promisify } = require('util');
 
 const minimatch = require('minimatch');
-const csso = require('csso');
-const terser = require('terser');
-const minifyJson = require('jsonminify');
-const imagemin = require('imagemin');
 const imageminSvg = require('imagemin-svgo');
 const imageminJpg = require('imagemin-jpegtran');
 const imageminPng = require('imagemin-pngquant');
 const imageminGif = require('imagemin-gifsicle');
 
+const optimizers = require('./optimizers');
+
 const writeFile = promisify(fs.writeFile);
 
-const optimizers = {
-  img: (source, opts, filepath) => imagemin
-    .buffer(source, opts)
-    .then(res => (filepath.endsWith('svg') ? res.toString('utf8') : res)),
+const imgOptimizer = 'imagemin';
+const jsOptimizer = 'terser';
+const cssOptimizer = 'csso';
+const jsonOptimizer = 'minifyJson';
 
-  js: async (source, opts) => terser.minify(source.toString('utf8'), opts).code,
-
-  css: async (source, opts) => csso.minify(source, opts).css,
-
-  json: async source => minifyJson(source.toString('utf8')),
-};
-
-const imgExtRegEx = /^(jpe?g|png|gif|svg)$/;
+const extOptimizerMap = new Map([
+  [/^(jpe?g|png|gif|svg)$/, imgOptimizer],
+  [/^js$/, jsOptimizer],
+  [/^css$/, cssOptimizer],
+  [/^json$/, jsonOptimizer],
+]);
 
 module.exports = class MinifyProcessedAssetsPlugin {
   constructor({
@@ -39,17 +35,18 @@ module.exports = class MinifyProcessedAssetsPlugin {
     csso: cssoOpts = {},
     terser: terserOpts = {},
   } = {}) {
-    this.opts = {
-      img: {
+    this.optimizers = {
+      [imgOptimizer]: optimizers.image.bind(null, {
         plugins: [
           imageminJpg(jpegtranOpts),
           imageminPng(pngquantOpts),
           imageminSvg(svgoOpts),
           imageminGif(gifsicleOpts),
         ],
-      },
-      css: cssoOpts,
-      js: terserOpts,
+      }),
+      [cssOptimizer]: optimizers.css.bind(null, cssoOpts),
+      [jsOptimizer]: optimizers.js.bind(null, terserOpts),
+      [jsonOptimizer]: optimizers.json,
     };
 
     if (patterns === undefined) {
@@ -78,12 +75,12 @@ module.exports = class MinifyProcessedAssetsPlugin {
           const filepath = path.join(outputPath, name);
           const ext = path.extname(name).slice(1);
 
-          // TODO: lame, refactor this
-          const optimizer = imgExtRegEx.test(ext) ? 'img' : ext;
+          const [optimizerName] = [...extOptimizerMap.keys()]
+            .filter(re => re.test(ext))
+            .map(re => extOptimizerMap.get(re));
 
-          return optimizers[optimizer](
+          return this.optimizers[optimizerName](
             compilation.assets[name].source(),
-            this.opts[optimizer],
             filepath,
           )
             .then(res => writeFile(filepath, res))
