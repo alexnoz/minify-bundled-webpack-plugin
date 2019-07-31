@@ -2,14 +2,15 @@ const path = require('path');
 
 const { CleanWebpackPlugin: CleanPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const MinifyBundledPlugin = require('../src');
+
+const MinifyBundledPlugin = require('../../src');
 
 const joinDir = path.join.bind(null, __dirname);
 
 module.exports = {
   mode: 'development',
   context: __dirname,
-  entry: './fixtures',
+  entry: '.',
   output: {
     path: joinDir('dist'),
     filename: './[name].[chunkhash].js',
@@ -18,13 +19,13 @@ module.exports = {
     new CleanPlugin(),
     new CopyPlugin([
       {
-        from: joinDir('fixtures/assets/*'),
-        to: joinDir('dist'),
-        context: 'fixtures/',
+        from: joinDir('original/*'),
+        to: joinDir('dist/assets'),
+        context: 'original',
       },
     ]),
     new MinifyBundledPlugin({
-      exclude: '**/file.js',
+      // exclude: '**/file.js',
       patterns: ['**/assets/*.+(svg|jpg|json|css|js)'],
       csso: {},
 

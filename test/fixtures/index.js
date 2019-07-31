@@ -1,1 +1,1 @@
-const noop = () => {};
+// Empty
