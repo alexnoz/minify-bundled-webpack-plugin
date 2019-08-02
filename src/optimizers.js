@@ -1,14 +1,9 @@
 const minifyJson = require('jsonminify');
-const imagemin = require('imagemin');
 const csso = require('csso');
 const terser = require('terser');
 
-exports.image = (opts, source, filepath) => imagemin
-  .buffer(source, opts)
-  .then(res => (filepath.endsWith('svg') ? res.toString('utf8') : res));
+exports.js = (source, opts) => terser.minify(source, opts).code;
 
-exports.js = async (opts, source) => terser.minify(source.toString('utf8'), opts).code;
+exports.css = (source, opts) => csso.minify(source, opts).css;
 
-exports.css = async (opts, source) => csso.minify(source, opts).css;
-
-exports.json = async source => minifyJson(source.toString('utf8'));
+exports.json = minifyJson;

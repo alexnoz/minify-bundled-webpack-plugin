@@ -1,52 +1,20 @@
 const path = require('path');
-const fs = require('fs');
-const { promisify } = require('util');
 
 const minimatch = require('minimatch');
-const imageminSvg = require('imagemin-svgo');
-const imageminJpg = require('imagemin-jpegtran');
-const imageminPng = require('imagemin-pngquant');
-const imageminGif = require('imagemin-gifsicle');
+const RawSource = require('webpack-sources/lib/RawSource');
 
 const optimizers = require('./optimizers');
-
-const writeFile = promisify(fs.writeFile);
-
-const imgOptimizer = 'imagemin';
-const jsOptimizer = 'terser';
-const cssOptimizer = 'csso';
-const jsonOptimizer = 'minifyJson';
-
-const extOptimizerMap = new Map([
-  [/^(jpe?g|png|gif|svg)$/, imgOptimizer],
-  [/^js$/, jsOptimizer],
-  [/^css$/, cssOptimizer],
-  [/^json$/, jsonOptimizer],
-]);
 
 module.exports = class MinifyProcessedAssetsPlugin {
   constructor({
     patterns,
     exclude = '',
-    jpegtran: jpegtranOpts = {},
-    pngquant: pngquantOpts = {},
-    svgo: svgoOpts = {},
-    gifsicle: gifsicleOpts = {},
     csso: cssoOpts = {},
     terser: terserOpts = {},
   } = {}) {
-    this.optimizers = {
-      [imgOptimizer]: optimizers.image.bind(null, {
-        plugins: [
-          imageminJpg(jpegtranOpts),
-          imageminPng(pngquantOpts),
-          imageminSvg(svgoOpts),
-          imageminGif(gifsicleOpts),
-        ],
-      }),
-      [cssOptimizer]: optimizers.css.bind(null, cssoOpts),
-      [jsOptimizer]: optimizers.js.bind(null, terserOpts),
-      [jsonOptimizer]: optimizers.json,
+    this.optimizerOpts = {
+      css: cssoOpts,
+      js: terserOpts,
     };
 
     if (patterns === undefined) {
@@ -62,32 +30,27 @@ module.exports = class MinifyProcessedAssetsPlugin {
   apply(compiler) {
     const pluginName = this.constructor.name;
 
-    compiler.hooks.done.tapPromise(pluginName, ({ compilation }) => {
-      const outputPath = compilation.outputOptions.path;
-
-      // TODO: an asset may not be in the webpack's compilation
+    compiler.hooks.emit.tapPromise(pluginName, compilation => {
+      // TODO: an asset may be not in the webpack's compilation
       const assetsPromises = Object.keys(compilation.assets)
         .filter(
           name => !minimatch(name, this.excludePattern)
             && this.patterns.some(pattern => minimatch(name, pattern)),
         )
-        .map(name => {
-          const filepath = path.join(outputPath, name);
+        .map(async name => {
           const ext = path.extname(name).slice(1);
+          const optimizer = optimizers[ext];
 
-          const [optimizerName] = [...extOptimizerMap.keys()]
-            .filter(re => re.test(ext))
-            .map(re => extOptimizerMap.get(re));
-
-          return this.optimizers[optimizerName](
-            compilation.assets[name].source(),
-            filepath,
-          )
-            .then(res => writeFile(filepath, res))
-            .catch(
-              err => err.code !== 'ENOENT'
-                && compilation.warnings.push(new Error(`${pluginName}: ${err}`)),
+          try {
+            if (!optimizer) throw new Error(`no optimizers for '${ext}'`);
+            const res = optimizer(
+              compilation.assets[name].source().toString(),
+              this.optimizerOpts[ext],
             );
+            compilation.assets[name] = new RawSource(res);
+          } catch (err) {
+            compilation.warnings.push(new Error(`${pluginName}: ${err}`));
+          }
         });
 
       return Promise.all(assetsPromises);

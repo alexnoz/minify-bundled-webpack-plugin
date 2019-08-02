@@ -1,6 +1,6 @@
 const path = require('path');
 
-const { CleanWebpackPlugin: CleanPlugin } = require('clean-webpack-plugin');
+const CleanPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
 const CopyPlugin = require('copy-webpack-plugin');
 
 const MinifyBundledPlugin = require('../../src');
@@ -26,20 +26,7 @@ module.exports = {
     ]),
     new MinifyBundledPlugin({
       // exclude: '**/file.js',
-      patterns: ['**/assets/*.+(svg|jpg|json|css|js)'],
-      csso: {},
-
-      terser: {},
-
-      jpegtran: {
-        progressive: true,
-      },
-
-      svgo: {
-        plugins: [{ removeViewBox: false }],
-      },
-
-      pngquant: {},
+      patterns: ['**/assets/*.+(json|css|js)'],
     }),
   ],
 };
