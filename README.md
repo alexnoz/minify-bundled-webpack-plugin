@@ -1,4 +1,5 @@
 # minify-bundled-webpack-plugin
+[![Build status](https://travis-ci.org/alexnoz/minify-bundled-webpack-plugin.svg?branch=master)](https://travis-ci.org/alexnoz/minify-bundled-webpack-plugin) [![Current version](https://badgen.net/npm/v/minify-bundled-webpack-plugin)](https://www.npmjs.com/package/minify-bundled-webpack-plugin)
 > A simple webpack plugin that minifies assets (`js`, `css`, `json`) that weren't processed by webpack
 
 ## Install
