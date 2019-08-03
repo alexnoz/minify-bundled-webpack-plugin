@@ -1,6 +1,6 @@
 {
   "name": "minify-bundled-webpack-plugin",
-  "description": "Minify bundled files that weren't processed by webpack",
+  "description": "Minify files that weren't processed by webpack",
   "version": "0.0.1",
   "main": "./src/index.js",
   "repository": "git@github.com:alexnoz/minify-bundled-webpack-plugin.git",
@@ -12,7 +12,10 @@
     "webpack",
     "plugin",
     "optimize",
-    "minify"
+    "minify",
+    "js",
+    "css",
+    "json"
   ],
   "scripts": {
     "test": "jest"
