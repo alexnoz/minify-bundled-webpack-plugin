@@ -5,7 +5,7 @@ const RawSource = require('webpack-sources/lib/RawSource');
 
 const optimizers = require('./optimizers');
 
-module.exports = class MinifyProcessedAssetsPlugin {
+module.exports = class MinifyBundledPlugin {
   constructor({
     patterns,
     exclude = '',
