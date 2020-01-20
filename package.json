@@ -17,6 +17,9 @@
     "css",
     "json"
   ],
+  "files": [
+    "src/"
+  ],
   "scripts": {
     "test": "jest",
     "prepublishOnly": "yarn test"
