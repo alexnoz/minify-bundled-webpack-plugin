@@ -1,3 +1,5 @@
+/** @typedef {import('webpack').Compiler} WebpackCompiler */
+
 const path = require('path');
 
 const minimatch = require('minimatch');
@@ -26,6 +28,8 @@ module.exports = class MinifyBundledPlugin {
     this.patterns = Array.isArray(patterns) ? patterns : [patterns];
     this.excludePattern = exclude;
   }
+
+  /** @param {WebpackCompiler} compiler */
 
   apply(compiler) {
     const pluginName = this.constructor.name;
