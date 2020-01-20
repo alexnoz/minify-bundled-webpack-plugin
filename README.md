@@ -4,7 +4,7 @@
 
 ## What?
 
-Say, you have some `js`, `css` or `json` files in your project which shouldn't be processed by webpack's loaders/plugins, so copy them from one place to another using [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin). Chances are, you want those files to be minified after you copy them. And that's exactly what this plugin is for! Of course, you can achieve the same thing using the [transform option](https://github.com/webpack-contrib/copy-webpack-plugin#transform) for `copy-webpack-plugin`, but sometimes you simply don't have access to `copy-webpack-plugin`'s options (for example, if you're using [@angular/cli](https://github.com/angular/angular-cli) to build your project).
+Say, you have some `js`, `css` or `json` files in your project which shouldn't be processed by webpack's loaders/plugins, so you copy them from one place to another using [copy-webpack-plugin](https://github.com/webpack-contrib/copy-webpack-plugin). Chances are, you want those files to be minified after you copy them. And that's exactly what this plugin is for! Of course, you can achieve the same thing using the [transform option](https://github.com/webpack-contrib/copy-webpack-plugin#transform) for `copy-webpack-plugin`, but sometimes you simply don't have access to `copy-webpack-plugin`'s options (for example, if you're using [@angular/cli](https://github.com/angular/angular-cli) to build your project).
 
 ## Install
 
