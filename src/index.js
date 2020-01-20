@@ -42,7 +42,7 @@ module.exports = class MinifyBundledPlugin {
           const optimizer = optimizers[ext];
 
           try {
-            if (!optimizer) throw new Error(`no optimizers for '${ext}'`);
+            if (!optimizer) throw new Error(`${pluginName}: no optimizers for '${ext}'`);
             const res = optimizer(
               compilation.assets[name].source().toString(),
               this.optimizerOpts[ext],
