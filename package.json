@@ -34,7 +34,7 @@
     "csso": "3.5.1",
     "jsonminify": "0.4.1",
     "minimatch": "3.0.4",
-    "terser": "4.0.0",
+    "terser": "4.8.1",
     "webpack-sources": "1.4.1"
   },
   "devDependencies": {
